@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.font-serif {
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* Leaflet fixes for dark theme */
+.leaflet-container {
+  background: #1c1917;
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #171717;
+  color: #ededed;
+}
+
+.leaflet-popup-content-wrapper {
+  border: 1px solid #404040;
+}
+
+.leaflet-control-attribution {
+  background: rgba(23, 23, 23, 0.8) !important;
+  color: #a3a3a3 !important;
+}
+
+.leaflet-control-attribution a {
+  color: #fbbf24 !important;
+}
