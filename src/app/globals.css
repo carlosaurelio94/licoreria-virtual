@@ -367,14 +367,15 @@ nav.main a.active::after {
     radial-gradient(
       ellipse 60% 70% at 25% 40%,
       rgba(10, 9, 8, 0) 0%,
-      rgba(10, 9, 8, 0.55) 60%,
-      rgba(10, 9, 8, 0.92) 100%
+      rgba(10, 9, 8, 0.5) 60%,
+      rgba(10, 9, 8, 0.85) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(10, 9, 8, 0.6) 0%,
-      rgba(10, 9, 8, 0.2) 35%,
-      rgba(10, 9, 8, 0.9) 90%
+      rgba(10, 9, 8, 0.55) 0%,
+      rgba(10, 9, 8, 0.18) 35%,
+      rgba(10, 9, 8, 0.55) 92%,
+      rgba(10, 9, 8, 0.75) 100%
     ),
     url("https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=2400&q=80");
   background-size: cover;
@@ -394,38 +395,39 @@ nav.main a.active::after {
 .hero .frame {
   position: absolute;
   inset: 24px;
-  border: 1px solid rgba(201, 165, 90, 0.18);
+  border: 1px solid rgba(201, 165, 90, 0.32);
   pointer-events: none;
+  z-index: 1;
 }
 .hero .frame .corner {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  border-color: var(--gold);
+  width: 30px;
+  height: 30px;
+  border-color: var(--gold-bright);
 }
 .hero .frame .c-tl {
-  top: -1px;
-  left: -1px;
-  border-top: 1px solid;
-  border-left: 1px solid;
+  top: -2px;
+  left: -2px;
+  border-top: 2px solid;
+  border-left: 2px solid;
 }
 .hero .frame .c-tr {
-  top: -1px;
-  right: -1px;
-  border-top: 1px solid;
-  border-right: 1px solid;
+  top: -2px;
+  right: -2px;
+  border-top: 2px solid;
+  border-right: 2px solid;
 }
 .hero .frame .c-bl {
-  bottom: -1px;
-  left: -1px;
-  border-bottom: 1px solid;
-  border-left: 1px solid;
+  bottom: -2px;
+  left: -2px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
 }
 .hero .frame .c-br {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 1px solid;
-  border-right: 1px solid;
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
 }
 
 .hero .content {
@@ -616,7 +618,7 @@ nav.main a.active::after {
   }
   .hero-meta {
     position: static;
-    padding: 14px 0 26px;
+    padding: 14px 0 34px;
     margin-top: auto;
   }
   .hero-meta .row {
