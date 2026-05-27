@@ -17,6 +17,7 @@ type Ctx = {
   setLocale: (l: Locale) => void;
   t: AnyDict;
   fmtPrice: (n: number) => string;
+  fmtNum: (n: number) => string;
 };
 
 const I18nContext = createContext<Ctx | null>(null);
@@ -38,22 +39,25 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = dict[locale];
 
-  const fmtPrice = useCallback(
+  const fmtNum = useCallback(
     (n: number) => {
       try {
         return new Intl.NumberFormat(locale === "es" ? "es-AR" : "en-US", {
-          style: "currency",
-          currency: "ARS",
           maximumFractionDigits: 0,
         }).format(n);
       } catch {
-        return `$${n}`;
+        return String(n);
       }
     },
     [locale],
   );
 
-  const value = useMemo(() => ({ locale, setLocale, t, fmtPrice }), [locale, setLocale, t, fmtPrice]);
+  const fmtPrice = useCallback((n: number) => "$" + fmtNum(n), [fmtNum]);
+
+  const value = useMemo(
+    () => ({ locale, setLocale, t, fmtPrice, fmtNum }),
+    [locale, setLocale, t, fmtPrice, fmtNum],
+  );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

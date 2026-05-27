@@ -6,23 +6,44 @@ export default function ConsejosPage() {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="font-serif text-3xl font-bold text-neutral-100 md:text-4xl">
-        📖 {t.tips.title}
-      </h1>
-      <p className="mt-2 text-neutral-400">{t.tips.subtitle}</p>
-
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
-        {t.tips.items.map((it) => (
+    <div>
+      <section className="page-head">
+        <div className="wrap inner">
           <div
-            key={it.title}
-            className="rounded-lg border border-neutral-800 bg-neutral-900 p-5"
+            className="eyebrow caps"
+            style={{ color: "var(--gold-text)", display: "flex", alignItems: "center", gap: 14 }}
           >
-            <h2 className="mb-2 font-semibold text-amber-400">🥃 {it.title}</h2>
-            <p className="text-sm leading-relaxed text-neutral-300">{it.body}</p>
+            <span style={{ width: 28, height: 1, background: "var(--gold)", opacity: 0.7 }} />
+            <span>{t.tips.eyebrow}</span>
           </div>
-        ))}
-      </div>
+          <h1>
+            {t.tips.h1Pre}
+            <em>{t.tips.h1Em}</em>
+            {t.tips.h1Post}
+          </h1>
+          <p className="sub">{t.tips.sub}</p>
+        </div>
+      </section>
+
+      <section style={{ padding: "50px 0 110px" }}>
+        <div className="wrap">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: 20,
+            }}
+          >
+            {t.tips.items.map((it) => (
+              <article key={it.title} className="tip-card">
+                <div className="eyebrow">{it.eyebrow}</div>
+                <h3>{it.title}</h3>
+                <p>{it.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

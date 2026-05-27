@@ -5,19 +5,33 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useCart } from "@/lib/cart";
+import { ArrowRight, Laurel, Stars } from "@/components/icons";
 import type { Product } from "@/data/products";
 
 const SingleMarkerMap = dynamic(() => import("@/components/SingleMarkerMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-64 items-center justify-center rounded border border-neutral-800 bg-neutral-900 text-sm text-neutral-500">
-      …
+    <div
+      style={{
+        height: 280,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "var(--carbon)",
+        border: "1px solid var(--line-soft)",
+        color: "var(--ash)",
+        fontSize: 11,
+        letterSpacing: "0.24em",
+        textTransform: "uppercase",
+      }}
+    >
+      ···
     </div>
   ),
 });
 
 export function ProductDetail({ product }: { product: Product }) {
-  const { t, locale, fmtPrice } = useI18n();
+  const { t, locale, fmtNum } = useI18n();
   const { add } = useCart();
   const [added, setAdded] = useState(false);
 
@@ -28,129 +42,200 @@ export function ProductDetail({ product }: { product: Product }) {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <Link href="/catalogo" className="mb-4 inline-block text-sm text-amber-400 hover:underline">
-        ← {t.nav.catalog}
-      </Link>
+    <div>
+      <section style={{ padding: "40px 0 110px" }}>
+        <div className="wrap">
+          <Link
+            href="/catalogo"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              fontSize: 11,
+              letterSpacing: "0.24em",
+              textTransform: "uppercase",
+              color: "var(--gold-text)",
+              marginBottom: 36,
+            }}
+          >
+            ← {t.product.backToCatalog}
+          </Link>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="relative">
-          {product.bestSeller && (
-            <span className="absolute left-3 top-3 z-10 rounded bg-amber-500 px-2 py-0.5 text-xs font-bold text-neutral-950">
-              {t.product.bestSeller}
-            </span>
-          )}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={product.image}
-            alt={product.name}
-            className="aspect-square w-full rounded-lg border border-neutral-800 object-cover"
-          />
-        </div>
-
-        <div>
-          <p className="text-sm uppercase tracking-wide text-amber-400">{product.brand}</p>
-          <h1 className="font-serif text-3xl font-bold text-neutral-100 md:text-4xl">
-            {product.name}
-          </h1>
-
-          <div className="mt-2 flex items-center gap-2 text-amber-400">
-            {"★".repeat(Math.round(product.rating))}
-            <span className="text-sm text-neutral-500">
-              {product.rating.toFixed(1)} · {product.reviews.length} {t.product.reviews.toLowerCase()}
-            </span>
-          </div>
-
-          <p className="mt-4 text-neutral-300">{product.description[locale]}</p>
-
-          <dl className="mt-6 grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <dt className="text-xs uppercase text-neutral-500">{t.product.origin}</dt>
-              <dd className="text-neutral-100">{product.country[locale]}</dd>
+          <div className="product-detail">
+            <div className="photo">
+              {product.bestSeller && (
+                <span className="badge-best" style={{ zIndex: 3 }}>
+                  <span className="laurel">
+                    <Laurel />
+                  </span>
+                  <span className="metal-text">{t.product.bestSeller}</span>
+                </span>
+              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={product.image} alt={product.name} />
             </div>
-            <div>
-              <dt className="text-xs uppercase text-neutral-500">{t.product.region}</dt>
-              <dd className="text-neutral-100">{product.region[locale]}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase text-neutral-500">{t.product.abv}</dt>
-              <dd className="text-neutral-100">{product.abv}%</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase text-neutral-500">{t.product.volume}</dt>
-              <dd className="text-neutral-100">{product.volumeMl}ml</dd>
-            </div>
-          </dl>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {product.profile.map((p) => (
-              <span
-                key={p}
-                className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-300"
+            <div>
+              <div className="brand-line">{product.brand}</div>
+              <h1>{product.name}</h1>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: 18,
+                }}
               >
-                {t.common.perfilLabels[p]}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-8 flex items-end justify-between rounded-lg border border-neutral-800 bg-neutral-900 p-4">
-            <div>
-              <p className="text-xs uppercase text-neutral-500">{t.product.price}</p>
-              <p className="text-3xl font-bold text-amber-400">{fmtPrice(product.priceArs)}</p>
-            </div>
-            <button
-              type="button"
-              onClick={handleAdd}
-              className="rounded bg-amber-500 px-5 py-3 font-bold text-neutral-950 hover:bg-amber-400"
-            >
-              {added ? `✓ ${t.product.added}` : t.product.addToCart}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <section className="mt-12 grid gap-6 md:grid-cols-2">
-        <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
-          <h2 className="mb-2 font-semibold text-amber-400">🥃 {t.product.tip}</h2>
-          <p className="text-sm text-neutral-300">{product.servingTip[locale]}</p>
-        </div>
-        <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
-          <h2 className="mb-2 font-semibold text-amber-400">🍽 {t.product.pairs}</h2>
-          <p className="text-sm text-neutral-300">{product.pairsWith[locale]}</p>
-        </div>
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 font-semibold text-neutral-100">
-          📍 {product.country[locale]} — {product.region[locale]}
-        </h2>
-        <div className="h-64 overflow-hidden rounded-lg border border-neutral-800">
-          <SingleMarkerMap
-            lat={product.country.lat}
-            lng={product.country.lng}
-            label={`${product.name} — ${product.region[locale]}`}
-          />
-        </div>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="mb-4 font-serif text-2xl font-bold text-neutral-100">{t.product.reviews}</h2>
-        {product.reviews.length === 0 ? (
-          <p className="text-sm text-neutral-500">{t.product.noReviews}</p>
-        ) : (
-          <ul className="space-y-3">
-            {product.reviews.map((r, i) => (
-              <li key={i} className="rounded-lg border border-neutral-800 bg-neutral-900 p-4">
-                <div className="mb-1 flex items-center justify-between">
-                  <span className="font-semibold text-neutral-100">{r.author}</span>
-                  <span className="text-amber-400">{"★".repeat(r.rating)}</span>
+                <div style={{ display: "flex", gap: 3, color: "var(--gold-text)" }}>
+                  <Stars rating={product.rating} />
                 </div>
-                <p className="text-sm text-neutral-300">{r.comment[locale]}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+                <span style={{ color: "var(--smoke)", fontSize: 12 }}>
+                  {product.rating.toFixed(1)} · {product.reviews.length}{" "}
+                  <span style={{ textTransform: "lowercase" }}>{t.product.reviews}</span>
+                </span>
+              </div>
+
+              <p style={{ color: "var(--cream)", opacity: 0.88, fontSize: 16, lineHeight: 1.65 }}>
+                {product.description[locale]}
+              </p>
+
+              <dl className="specs-grid">
+                <div>
+                  <dt>{t.product.origin}</dt>
+                  <dd>{product.country[locale]}</dd>
+                </div>
+                <div>
+                  <dt>{t.product.region}</dt>
+                  <dd>{product.region[locale]}</dd>
+                </div>
+                <div>
+                  <dt>{t.product.abv}</dt>
+                  <dd>{product.abv}%</dd>
+                </div>
+                <div>
+                  <dt>{t.product.volume}</dt>
+                  <dd>{product.volumeMl} ml</dd>
+                </div>
+              </dl>
+
+              <div className="chips">
+                {product.profile.map((p) => (
+                  <span key={p} className="chip">
+                    {t.common.perfilLabels[p]}
+                  </span>
+                ))}
+              </div>
+
+              <div className="price-row">
+                <div>
+                  <div
+                    style={{
+                      fontSize: 10.5,
+                      letterSpacing: "0.24em",
+                      textTransform: "uppercase",
+                      color: "var(--ash)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {t.product.price}
+                  </div>
+                  <div className="price-big">
+                    <span className="cur">ARS</span>
+                    {fmtNum(product.priceArs)}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  className="btn btn-gold shimmer"
+                >
+                  {added ? t.product.added : t.product.addToCart} <ArrowRight />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Tip + Pairs */}
+          <div className="tip-pair-grid" style={{ marginTop: 60 }}>
+            <div className="tip-card">
+              <div className="eyebrow">{t.product.tip}</div>
+              <h3>{product.name}</h3>
+              <p>{product.servingTip[locale]}</p>
+            </div>
+            <div className="tip-card">
+              <div className="eyebrow">{t.product.pairs}</div>
+              <h3>{product.region[locale]}</h3>
+              <p>{product.pairsWith[locale]}</p>
+            </div>
+          </div>
+
+          {/* Origin map */}
+          <div style={{ marginTop: 60 }}>
+            <div
+              className="eyebrow caps"
+              style={{
+                color: "var(--gold-text)",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                marginBottom: 18,
+              }}
+            >
+              <span style={{ width: 28, height: 1, background: "var(--gold)", opacity: 0.7 }} />
+              <span>
+                {product.country[locale]} — {product.region[locale]}
+              </span>
+            </div>
+            <div className="map-frame" style={{ height: 320 }}>
+              <SingleMarkerMap
+                lat={product.country.lat}
+                lng={product.country.lng}
+                label={`${product.name} — ${product.region[locale]}`}
+              />
+            </div>
+          </div>
+
+          {/* Reviews */}
+          <div style={{ marginTop: 60 }}>
+            <div
+              className="eyebrow caps"
+              style={{
+                color: "var(--gold-text)",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                marginBottom: 24,
+              }}
+            >
+              <span style={{ width: 28, height: 1, background: "var(--gold)", opacity: 0.7 }} />
+              <span>{t.product.reviews}</span>
+            </div>
+            {product.reviews.length === 0 ? (
+              <p style={{ color: "var(--ash)", fontSize: 13 }}>{t.product.noReviews}</p>
+            ) : (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: 16,
+                }}
+              >
+                {product.reviews.map((r, i) => (
+                  <div key={i} className="review">
+                    <div className="head">
+                      <span className="who">{r.author}</span>
+                      <span className="st">{"★".repeat(r.rating)}</span>
+                    </div>
+                    <p>{r.comment[locale]}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </section>
+
     </div>
   );
 }

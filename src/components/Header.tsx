@@ -1,96 +1,118 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useCart } from "@/lib/cart";
+import { Decanter, Cart, MenuIcon } from "@/components/icons";
+
+function TopBar() {
+  const { t } = useI18n();
+  return (
+    <div className="topbar">
+      <div className="wrap row">
+        <div className="marquee">
+          <span>{t.topbar.a}</span>
+          <span className="dot" />
+          <span>{t.topbar.b}</span>
+          <span className="dot" />
+          <span>{t.topbar.c}</span>
+        </div>
+        <div className="right">
+          <span>{t.topbar.right}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function Header() {
   const { t, locale, setLocale } = useI18n();
   const { count, setOpen } = useCart();
+  const [bumped] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const links = [
+    { href: "/", label: t.nav.reserve, match: pathname === "/" },
+    {
+      href: "/catalogo",
+      label: t.nav.catalog,
+      match: pathname.startsWith("/catalogo") || pathname.startsWith("/producto"),
+    },
+    { href: "/recomendador", label: t.nav.ritual, match: pathname.startsWith("/recomendador") },
+    { href: "/mapa", label: t.nav.origins, match: pathname.startsWith("/mapa") },
+    { href: "/consejos", label: t.nav.tips, match: pathname.startsWith("/consejos") },
+  ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
-          <span className="text-2xl">🥃</span>
-          <span className="font-serif text-xl font-bold tracking-wide text-amber-400">
-            {t.brand}
-          </span>
-        </Link>
-
-        <nav className="hidden items-center gap-6 text-sm md:flex">
-          <Link href="/catalogo" className="text-neutral-200 hover:text-amber-400">
-            {t.nav.catalog}
-          </Link>
-          <Link href="/recomendador" className="text-neutral-200 hover:text-amber-400">
-            {t.nav.recommender}
-          </Link>
-          <Link href="/mapa" className="text-neutral-200 hover:text-amber-400">
-            {t.nav.map}
-          </Link>
-          <Link href="/consejos" className="text-neutral-200 hover:text-amber-400">
-            {t.nav.tips}
-          </Link>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setLocale(locale === "es" ? "en" : "es")}
-            className="rounded border border-neutral-700 px-2 py-1 text-xs font-medium uppercase text-neutral-200 hover:border-amber-400 hover:text-amber-400"
-            aria-label="Toggle language"
+    <>
+      <TopBar />
+      <header className="site">
+        <div className="wrap row">
+          <Link
+            href="/"
+            className="brand"
+            aria-label="Liquoría"
+            onClick={() => setMenuOpen(false)}
           >
-            {locale === "es" ? "EN" : "ES"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="relative rounded border border-neutral-700 px-3 py-1 text-sm text-neutral-200 hover:border-amber-400 hover:text-amber-400"
-          >
-            🛒
-            {count > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-neutral-950">
-                {count}
-              </span>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setMenuOpen((v) => !v)}
-            className="rounded border border-neutral-700 px-2 py-1 text-sm text-neutral-200 md:hidden"
-            aria-label="Open menu"
-          >
-            ☰
-          </button>
+            <span className="glyph">
+              <Decanter />
+            </span>
+            <span className="word">
+              {t.brand.line1}
+              <span className="amp">{t.brand.italic}</span>
+              {t.brand.line2}
+            </span>
+          </Link>
+          <nav className="main">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className={l.match ? "active" : ""}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="actions">
+            <button
+              type="button"
+              className="lang-btn"
+              onClick={() => setLocale(locale === "es" ? "en" : "es")}
+              aria-label="Toggle language"
+            >
+              <span className={locale === "es" ? "on" : ""}>ES</span>
+              <span className="sep">/</span>
+              <span className={locale === "en" ? "on" : ""}>EN</span>
+            </button>
+            <button
+              type="button"
+              className="icon-btn cart-btn"
+              onClick={() => setOpen(true)}
+              aria-label={t.cart.title}
+            >
+              <Cart />
+              {count > 0 && <span className={"cart-badge" + (bumped ? " bump" : "")}>{count}</span>}
+            </button>
+            <button
+              type="button"
+              className="mobile-menu"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Menu"
+            >
+              <MenuIcon />
+            </button>
+          </div>
         </div>
-      </div>
-
-      {menuOpen && (
-        <nav className="flex flex-col gap-2 border-t border-neutral-800 bg-neutral-950 px-4 py-3 md:hidden">
-          <Link href="/catalogo" onClick={() => setMenuOpen(false)} className="py-1 text-neutral-200">
-            {t.nav.catalog}
-          </Link>
-          <Link
-            href="/recomendador"
-            onClick={() => setMenuOpen(false)}
-            className="py-1 text-neutral-200"
-          >
-            {t.nav.recommender}
-          </Link>
-          <Link href="/mapa" onClick={() => setMenuOpen(false)} className="py-1 text-neutral-200">
-            {t.nav.map}
-          </Link>
-          <Link
-            href="/consejos"
-            onClick={() => setMenuOpen(false)}
-            className="py-1 text-neutral-200"
-          >
-            {t.nav.tips}
-          </Link>
-        </nav>
-      )}
-    </header>
+        {menuOpen && (
+          <nav className="mobile-nav">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        )}
+      </header>
+    </>
   );
 }

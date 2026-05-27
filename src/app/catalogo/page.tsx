@@ -8,7 +8,7 @@ import { ProductCard } from "@/components/ProductCard";
 type Sort = "priceAsc" | "priceDesc" | "rating";
 
 export default function CatalogoPage() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const [type, setType] = useState<LiquorType | "all">("all");
   const [profile, setProfile] = useState<FlavorProfile | "all">("all");
   const [sort, setSort] = useState<Sort>("rating");
@@ -27,71 +27,80 @@ export default function CatalogoPage() {
   }, [type, profile, sort]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-6 font-serif text-3xl font-bold text-neutral-100 md:text-4xl">
-        {t.catalog.title}
-      </h1>
-
-      <div className="mb-6 flex flex-wrap gap-3 rounded-lg border border-neutral-800 bg-neutral-900 p-4">
-        <label className="flex flex-col text-xs text-neutral-400">
-          {t.catalog.filterType}
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as LiquorType | "all")}
-            className="mt-1 rounded border border-neutral-700 bg-neutral-950 px-2 py-1 text-sm text-neutral-100"
-          >
-            <option value="all">{t.catalog.filterAll}</option>
-            {types.map((typ) => (
-              <option key={typ} value={typ}>
-                {t.common.typeLabels[typ]}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="flex flex-col text-xs text-neutral-400">
-          {t.catalog.filterProfile}
-          <select
-            value={profile}
-            onChange={(e) => setProfile(e.target.value as FlavorProfile | "all")}
-            className="mt-1 rounded border border-neutral-700 bg-neutral-950 px-2 py-1 text-sm text-neutral-100"
-          >
-            <option value="all">{t.catalog.filterAll}</option>
-            {profiles.map((p) => (
-              <option key={p} value={p}>
-                {t.common.perfilLabels[p]}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="flex flex-col text-xs text-neutral-400">
-          {t.catalog.sortBy}
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as Sort)}
-            className="mt-1 rounded border border-neutral-700 bg-neutral-950 px-2 py-1 text-sm text-neutral-100"
-          >
-            <option value="rating">{t.catalog.sortRating}</option>
-            <option value="priceAsc">{t.catalog.sortPriceAsc}</option>
-            <option value="priceDesc">{t.catalog.sortPriceDesc}</option>
-          </select>
-        </label>
-
-        <div className="ml-auto self-end text-xs text-neutral-500">
-          {filtered.length} {locale === "es" ? "productos" : "products"}
+    <div>
+      <section className="page-head">
+        <div className="wrap inner">
+          <div className="eyebrow caps" style={{ color: "var(--gold-text)", display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ width: 28, height: 1, background: "var(--gold)", opacity: 0.7 }} />
+            <span>{t.catalog.eyebrow}</span>
+          </div>
+          <h1>
+            {t.catalog.h1Pre}
+            <em>{t.catalog.h1Em}</em>
+            {t.catalog.h1Post}
+          </h1>
+          <p className="sub">{t.catalog.sub}</p>
         </div>
-      </div>
+      </section>
 
-      {filtered.length === 0 ? (
-        <p className="py-12 text-center text-neutral-400">{t.catalog.empty}</p>
-      ) : (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+      <section style={{ padding: "50px 0 110px" }}>
+        <div className="wrap">
+          <div className="filters">
+            <label>
+              {t.catalog.filterType}
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value as LiquorType | "all")}
+              >
+                <option value="all">{t.catalog.filterAll}</option>
+                {types.map((typ) => (
+                  <option key={typ} value={typ}>
+                    {t.common.typeLabels[typ]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t.catalog.filterProfile}
+              <select
+                value={profile}
+                onChange={(e) => setProfile(e.target.value as FlavorProfile | "all")}
+              >
+                <option value="all">{t.catalog.filterAll}</option>
+                {profiles.map((p) => (
+                  <option key={p} value={p}>
+                    {t.common.perfilLabels[p]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t.catalog.sortBy}
+              <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
+                <option value="rating">{t.catalog.sortRating}</option>
+                <option value="priceAsc">{t.catalog.sortPriceAsc}</option>
+                <option value="priceDesc">{t.catalog.sortPriceDesc}</option>
+              </select>
+            </label>
+            <div className="count">
+              {filtered.length}{" "}
+              {filtered.length === 1 ? t.catalog.countOne : t.catalog.countMany}
+            </div>
+          </div>
+
+          {filtered.length === 0 ? (
+            <p style={{ textAlign: "center", padding: "60px 0", color: "var(--ash)", letterSpacing: "0.2em", textTransform: "uppercase", fontSize: 12 }}>
+              {t.catalog.empty}
+            </p>
+          ) : (
+            <div className="grid">
+              {filtered.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </section>
     </div>
   );
 }
